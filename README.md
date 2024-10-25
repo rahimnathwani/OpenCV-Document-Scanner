@@ -1,38 +1,51 @@
 # Document Scanner
 
-### An interactive document scanner built in Python using OpenCV
+This project is a fork of [OpenCV-Document-Scanner](https://github.com/andrewdcampbell/OpenCV-Document-Scanner). It provides a set of tools to detect and crop ID cards from images, allowing further cropping to extract specific regions, such as dates.
 
-The scanner takes a poorly scanned image, finds the corners of the document, applies the perspective transformation to get a top-down view of the document, sharpens the image, and applies an adaptive color threshold to clean up the image.
+## Requirements
 
-On my test dataset of 280 images, the program correctly detected the corners of the document 92.8% of the time.
+- Python 3.x
 
-This project makes use of the transform and imutils modules from pyimagesearch (which can be accessed [here](http://www.pyimagesearch.com/2014/09/01/build-kick-ass-mobile-document-scanner-just-5-minutes/)). The UI code for the interactive mode is adapted from `poly_editor.py` from [here](https://matplotlib.org/examples/event_handling/poly_editor.html).
+## Installation
 
-* You can manually click and drag the corners of the document to be perspective transformed:
-![Example of interactive GUI](https://github.com/andrewdcampbell/doc_scanner/blob/master/ui.gif)
+First, clone the repository:
 
-* The scanner can also process an entire directory of images automatically and save the output in an output directory:
-![Image Directory of images to be processed](https://github.com/andrewdcampbell/doc_scanner/blob/master/before_after.gif)
-
-#### Here are some examples of images before and after scan:
-<img src="https://github.com/andrewdcampbell/doc_scanner/blob/master/sample_images/cell_pic.jpg" height="450"> <img src="https://github.com/andrewdcampbell/doc_scanner/blob/master/output/cell_pic.jpg" height="450">
-
-<img src="https://github.com/andrewdcampbell/doc_scanner/blob/master/sample_images/receipt.jpg" height="450"> <img src="https://github.com/andrewdcampbell/doc_scanner/blob/master/output/receipt.jpg" height="450">
-
-<img src="https://github.com/andrewdcampbell/doc_scanner/blob/master/sample_images/math_cheat_sheet.JPG" height="450"> <img src="https://github.com/andrewdcampbell/doc_scanner/blob/master/output/math_cheat_sheet.JPG" height="450">
-
-<img src="https://github.com/andrewdcampbell/doc_scanner/blob/master/sample_images/dollar_bill.JPG" width="350"> <img src="https://github.com/andrewdcampbell/doc_scanner/blob/master/output/dollar_bill.JPG" width="350">
-
-
-### Usage
+```bash
+git clone https://github.com/rahimnathwani/OpenCV-Document-Scanner.git
+cd OpenCV-Document-Scanner
 ```
-python scan.py (--images <IMG_DIR> | --image <IMG_PATH>) [-i]
+
+Install the required dependencies:
 ```
-* The `-i` flag enables interactive mode, where you will be prompted to click and drag the corners of the document. For example, to scan a single image with interactive mode enabled:
+pip install -r requirements.txt
 ```
-python scan.py --image sample_images/desk.JPG -i
+# Usage
+## Basic Cropping
+To crop an image to focus only on the ID card, run:
 ```
-* Alternatively, to scan all images in a directory without any input:
+python scan.py --image image.jpg
 ```
-python scan.py --images sample_images
+Replace `image.jpg` with the name of your input image file. This command will create a cropped image in the output folder with the same filename.
+# Further Cropping
+You can further crop the output file by running:
 ```
+python crop.py output/image.jpg
+```
+This command will generate a series of images in the output folder:
+- `output/image_crop_0.jpg`
+- `output/image_crop_1.jpg`
+- `output/image_crop_2.jpg`
+- `output/image_crop_3.jpg`
+The final file, `output/image_crop_3.jpg`, will show only the Arabic date from the ID card.
+
+# Customizing Cropping Parameters
+If you need to extract other regions from the image, you can edit the `crop.py` file by modifying the `crop_params` list:
+```
+crop_params = [
+    (0.1, 0.1, 0.1, 0.1),  # Remove 10% from each edge
+    (0.2, 0.0, 0.0, 0.2),  # Remove 20% from top and right edges
+    (0.0, 0.2, 0.2, 0.0),  # Remove 20% from bottom and left edges
+    (0.8, 0.1, 0.4, 0.0),  # Extract just the date on the bottom right of the ID card
+]
+```
+Adjust the values in the list to customize the cropping regions as needed.
