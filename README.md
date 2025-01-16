@@ -26,7 +26,8 @@ To crop an image to focus only on the ID card, run:
 python scan.py --image image.jpg
 ```
 Replace `image.jpg` with the name of your input image file. This command will create a cropped image in the output folder with the same filename.
-# Further Cropping
+
+## Further Cropping
 You can further crop the output file by running:
 ```
 python crop.py output/image.jpg
@@ -37,6 +38,21 @@ This command will generate a series of images in the output folder:
 - `output/image_crop_2.jpg`
 - `output/image_crop_3.jpg`
 The final file, `output/image_crop_3.jpg`, will show only the Arabic date from the ID card.
+
+## Extracting Digits
+After cropping, you can process the image further to extract individual digits:
+
+1. First, convert the image to black and white using thresholding:
+```
+python threshold.py output/image_crop_3.jpg
+```
+This will create a new file with "_bw" suffix.
+
+2. Then, extract individual digits from the thresholded image:
+```
+python extract_digits.py output/image_crop_3_bw.jpg
+```
+The extracted digits will be saved as separate image files in the `digits` folder.
 
 # Customizing Cropping Parameters
 If you need to extract other regions from the image, you can edit the `crop.py` file by modifying the `crop_params` list:
