@@ -31,13 +31,20 @@ def crop_and_save(image_path, crop_params_list, output_dir='output'):
         print(f"Saved cropped image: {output_path}")
 
 # Example usage
-crop_params = [
-    (0.1, 0.1, 0.1, 0.1),  # Remove 10% from each edge
-    (0.2, 0.0, 0.0, 0.2),  # Remove 20% from top and right edges
-    (0.0, 0.2, 0.2, 0.0),  # Remove 20% from bottom and left edges
-    (0.8, 0.1, 0.4, 0.0), # Extract just the date on the bottom right of the ID card
-]
+if __name__ == "__main__":
+    import sys
+    if len(sys.argv) < 2:
+        print("Usage: python crop.py <image_path>")
+        sys.exit(1)
+        
+    image_path = sys.argv[1]
+    
+    crop_params = [
+        (0.1, 0.1, 0.1, 0.1),  # Remove 10% from each edge
+        (0.2, 0.0, 0.0, 0.2),  # Remove 20% from top and right edges
+        (0.0, 0.2, 0.2, 0.0),  # Remove 20% from bottom and left edges
+        (0.8, 0.1, 0.4, 0.0), # Extract just the date on the bottom right of the ID card
+    ]
 
-image_path = 'output/image.jpg'  # Replace with your image path
-crop_and_save(image_path, crop_params)
+    crop_and_save(image_path, crop_params)
 
