@@ -1,7 +1,8 @@
 import cv2
 import os
 
-def crop_and_save(image_path, crop_params_list, output_dir='output'):
+
+def crop_and_save(image_path, crop_params_list, output_dir="output"):
     # Load the image
     image = cv2.imread(image_path)
     assert image is not None, "Failed to load image"
@@ -30,21 +31,42 @@ def crop_and_save(image_path, crop_params_list, output_dir='output'):
         cv2.imwrite(output_path, cropped_image)
         print(f"Saved cropped image: {output_path}")
 
+
 # Example usage
 if __name__ == "__main__":
     import sys
+
     if len(sys.argv) < 2:
         print("Usage: python crop.py <image_path>")
         sys.exit(1)
-        
+
     image_path = sys.argv[1]
-    
+
     crop_params = [
         (0.1, 0.1, 0.1, 0.1),  # Remove 10% from each edge
         (0.2, 0.0, 0.0, 0.2),  # Remove 20% from top and right edges
         (0.0, 0.2, 0.2, 0.0),  # Remove 20% from bottom and left edges
-        (0.8, 0.1, 0.4, 0.0), # Extract just the date on the bottom right of the ID card
+        (
+            0.8,
+            0.1,
+            0.4,
+            0.0,
+        ),  # Extract just the date on the bottom right of the ID card
+        (0.79, 0.14, 0.4, 0),
+        (0.79, 0.14, 0.45, 0.51),  # 1
+        (0.79, 0.14, 0.50, 0.46),  # 2
+        (0.79, 0.14, 0.53, 0.43),  # 3
+        (0.79, 0.14, 0.57, 0.39),  # 4
+        (0.79, 0.14, 0.60, 0.36),  # 5
+        (0.79, 0.14, 0.65, 0.31),  # 6
+        (0.79, 0.14, 0.69, 0.27),  # 7
+        (0.79, 0.14, 0.72, 0.24),  # 8
+        (0.79, 0.14, 0.76, 0.2),  # 9
+        (0.79, 0.14, 0.8, 0.16),  # 10
+        (0.79, 0.14, 0.84, 0.12),  # 11
+        (0.79, 0.14, 0.88, 0.08),  # 12
+        (0.79, 0.14, 0.92, 0.04),  # 13
+        (0.79, 0.14, 0.96, 0),  # 14
     ]
 
     crop_and_save(image_path, crop_params)
-
