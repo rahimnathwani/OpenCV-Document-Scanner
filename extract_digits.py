@@ -4,7 +4,7 @@ import os
 from imutils import contours
 
 # Thresholding parameters
-BLUR_KERNEL_SIZE = 5  # Must be odd number. Larger = more blurring
+BLUR_KERNEL_SIZE = 3  # Must be odd number. Larger = more blurring
 THRESHOLD_VALUE = 64  # 0-255, pixels above this become white, below become black
 INVERT = False # Whether to invert the output images
 ORIGINAL = False  # Whether to use original image for digit extraction
@@ -13,6 +13,9 @@ def extract_digits(image_path, output_dir='digits'):
     # Create output directory if it doesn't exist
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
+
+    # Get the basename of the original file without extension
+    base_name = os.path.splitext(os.path.basename(image_path))[0]
 
     # Read the image
     image = cv2.imread(image_path)
@@ -63,7 +66,7 @@ def extract_digits(image_path, output_dir='digits'):
                 digit = cv2.bitwise_not(digit)
             
             # Save the digit
-            output_path = os.path.join(output_dir, f"{i}.png")
+            output_path = os.path.join(output_dir, f"{base_name}_{i}.png")
             cv2.imwrite(output_path, digit)
             print(f"Saved digit {i} to {output_path}")
 
