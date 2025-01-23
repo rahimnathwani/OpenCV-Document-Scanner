@@ -75,12 +75,25 @@ def process_uploaded_image(input_path, output_dir):
         print(f"Error during OCR: {str(e)}")
         ocr_result = "OCR Failed"
     
+    # Perform individual digit recognition
+    individual_digits = []
+    for digit_file in digit_files:
+        try:
+            digit_img = Image.open(str(digit_file))
+            digit_config = r'--oem 3 --psm 10 -l ara_number outputbase digits'  # PSM 10 for single character
+            digit_result = pytesseract.image_to_string(digit_img, config=digit_config).strip()
+            individual_digits.append(digit_result)
+        except Exception as e:
+            print(f"Error during individual digit OCR: {str(e)}")
+            individual_digits.append("?")
+    
     return {
         'original': f"uploads/{basename}",
         'scanned': f"results/{name}/{name}_scanned{ext}",
         'cropped': f"results/{name}/{name}_scanned_crop_0{ext}",
         'digits': [f"results/{name}/digits/{f.name}" for f in digit_files],
-        'ocr_result': ocr_result
+        'ocr_result': ocr_result,
+        'individual_digits': individual_digits
     }
 
 @rt('/')
@@ -108,9 +121,15 @@ def display_results(paths):
             Img(src=f"/{paths['cropped']}", style="max-width: 500px; height: auto; object-fit: contain"),
             H3(f"Extracted Digits ({len(paths['digits'])} found)"),
             Div(style="display: flex; flex-wrap: wrap; gap: 10px")(
-                *[Img(src=f"/{digit}", style="max-width: 50px; height: auto; object-fit: contain") for digit in paths['digits']]
+                *[
+                    Div(style="display: flex; flex-direction: column; align-items: center")(
+                        P(f"{paths['individual_digits'][i]}", style="margin: 5px 0; font-size: 0.9em"),
+                        Img(src=f"/{digit}", style="max-width: 50px; height: auto; object-fit: contain"),
+                    ) 
+                    for i, digit in enumerate(paths['digits'])
+                ]
             ) if paths['digits'] else P("No digits were extracted"),
-            H3("Tesseract Digit Recognition"),
+            H3("Full Region Tesseract Recognition"),
             P(f"Recognized digits: {paths['ocr_result']}")
         )
     )

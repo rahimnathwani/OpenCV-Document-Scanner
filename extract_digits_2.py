@@ -4,10 +4,10 @@ import os
 from imutils import contours
 
 # Thresholding parameters
-BLUR_KERNEL_SIZE = 3  
-THRESHOLD_VALUE = 64
+BLUR_KERNEL_SIZE = 3
+USE_ADAPTIVE = False  # Set to True to use adaptive thresholding instead of Otsu
 INVERT = False
-ORIGINAL = True
+ORIGINAL = False
 EXPECTED_DIGITS = 15  # Number of digits we expect to find
 
 def extract_digits(image_path, output_dir='digits'):
@@ -25,7 +25,20 @@ def extract_digits(image_path, output_dir='digits'):
 
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (BLUR_KERNEL_SIZE, BLUR_KERNEL_SIZE), 0)
-    _, thresh = cv2.threshold(blurred, THRESHOLD_VALUE, 255, cv2.THRESH_BINARY_INV)
+
+    if USE_ADAPTIVE:
+        # Adaptive thresholding - good for varying lighting conditions
+        thresh = cv2.adaptiveThreshold(
+            blurred,
+            255,
+            cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+            cv2.THRESH_BINARY_INV,
+            blockSize=11,
+            C=2
+        )
+    else:
+        # Otsu's method - automatically determines optimal threshold
+        _, thresh = cv2.threshold(blurred, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
 
     # Save debug images
     debug_dir = os.path.join(output_dir, 'debug')
