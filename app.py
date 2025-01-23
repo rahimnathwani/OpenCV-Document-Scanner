@@ -7,6 +7,8 @@ from scan import DocScanner
 from crop import crop_and_save
 from extract_digits_2 import extract_digits
 from pyimagesearch import transform
+import pytesseract
+from PIL import Image
 
 app, rt = fast_app()
 
@@ -62,11 +64,23 @@ def process_uploaded_image(input_path, output_dir):
     digit_files = sorted([f for f in digits_dir.glob('*.png')])
     print(f"Found {len(digit_files)} digit files: {[f.name for f in digit_files]}")
     
+    # Perform Tesseract OCR on the cropped region
+    try:
+        # Convert to PIL Image for Tesseract
+        cropped_img = Image.open(str(cropped_path))
+        # Configure Tesseract to use Arabic trained data and only look for digits
+        custom_config = r'--oem 3 --psm 6 -l ara_number outputbase digits'
+        ocr_result = pytesseract.image_to_string(cropped_img, config=custom_config).strip()
+    except Exception as e:
+        print(f"Error during OCR: {str(e)}")
+        ocr_result = "OCR Failed"
+    
     return {
         'original': f"uploads/{basename}",
         'scanned': f"results/{name}/{name}_scanned{ext}",
         'cropped': f"results/{name}/{name}_scanned_crop_0{ext}",
-        'digits': [f"results/{name}/digits/{f.name}" for f in digit_files]
+        'digits': [f"results/{name}/digits/{f.name}" for f in digit_files],
+        'ocr_result': ocr_result
     }
 
 @rt('/')
@@ -95,7 +109,9 @@ def display_results(paths):
             H3(f"Extracted Digits ({len(paths['digits'])} found)"),
             Div(style="display: flex; flex-wrap: wrap; gap: 10px")(
                 *[Img(src=f"/{digit}", style="max-width: 50px; height: auto; object-fit: contain") for digit in paths['digits']]
-            ) if paths['digits'] else P("No digits were extracted")
+            ) if paths['digits'] else P("No digits were extracted"),
+            H3("Tesseract Digit Recognition"),
+            P(f"Recognized digits: {paths['ocr_result']}")
         )
     )
 
