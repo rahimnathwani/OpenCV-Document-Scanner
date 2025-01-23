@@ -2,6 +2,7 @@ from fasthtml.common import *
 from pathlib import Path
 import cv2
 import os
+import shutil  # Add shutil import for recursive directory removal
 from scan import DocScanner
 from crop import crop_and_save
 from extract_digits_2 import extract_digits
@@ -107,6 +108,8 @@ async def upload(file: UploadFile):
     # Create unique results directory for this upload
     name = os.path.splitext(filename)[0]
     output_dir = results_dir / name
+    if output_dir.exists():
+        shutil.rmtree(output_dir)  # Recursively remove directory and contents
     output_dir.mkdir(exist_ok=True)
     
     # Save the uploaded file

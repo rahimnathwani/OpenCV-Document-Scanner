@@ -7,7 +7,7 @@ from imutils import contours
 BLUR_KERNEL_SIZE = 3  
 THRESHOLD_VALUE = 64
 INVERT = False
-ORIGINAL = False
+ORIGINAL = True
 EXPECTED_DIGITS = 15  # Number of digits we expect to find
 
 def extract_digits(image_path, output_dir='digits'):
@@ -99,7 +99,7 @@ def extract_digits(image_path, output_dir='digits'):
             if INVERT and not ORIGINAL:
                 digit = cv2.bitwise_not(digit)
             
-            output_path = os.path.join(output_dir, f"{base_name}_{i}.png")
+            output_path = os.path.join(output_dir, f"{base_name}_{i:03d}.png")
             cv2.imwrite(output_path, digit)
             print(f"Saved digit {i} to {output_path}")
     else:
