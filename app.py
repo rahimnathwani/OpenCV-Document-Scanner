@@ -77,8 +77,28 @@ def process_uploaded_image(input_path, output_dir):
     
     # Perform individual digit recognition
     individual_digits = []
+    
+    # First pass: calculate areas and find maximum
+    digit_areas = []
     for digit_file in digit_files:
+        digit_img = cv2.imread(str(digit_file), cv2.IMREAD_GRAYSCALE)
+        # Count non-zero pixels as the digit area
+        area = cv2.countNonZero(digit_img)
+        digit_areas.append(area)
+    
+    max_area = max(digit_areas) if digit_areas else 0
+    area_threshold = max_area * 0.30
+    print(digit_areas)
+    print(area_threshold)
+    # Second pass: recognize digits
+    for i, digit_file in enumerate(digit_files):
         try:
+            # If area is less than threshold, classify as zero
+            if digit_areas[i] < area_threshold:
+                individual_digits.append('0')
+                continue
+                
+            # Otherwise perform OCR
             digit_img = Image.open(str(digit_file))
             digit_config = r'--oem 3 --psm 10 -l ara_number outputbase digits'  # PSM 10 for single character
             digit_result = pytesseract.image_to_string(digit_img, config=digit_config).strip()
