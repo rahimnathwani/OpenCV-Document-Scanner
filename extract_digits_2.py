@@ -39,7 +39,7 @@ def extract_digits(image_path, output_dir='digits'):
 
     # Filter contours based on size and aspect ratio
     filtered_contours = []
-    min_area = (image.shape[0] * image.shape[1]) / 200  # Reduced from 100
+    min_area = (image.shape[0] * image.shape[1]) / 1000  # Reduced from 100
     max_area = (image.shape[0] * image.shape[1]) / 8    # Increased from 10
     
     for contour in contours_list:

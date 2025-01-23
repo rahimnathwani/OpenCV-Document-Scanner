@@ -51,6 +51,8 @@ def process_uploaded_image(input_path, output_dir):
     # Extract digits with error handling
     try:
         extract_digits(str(cropped_path), str(digits_dir))
+        digit_count = len([f for f in os.listdir(digits_dir) if f.endswith('.png')])
+        print(f"Extracted {digit_count} digits")
     except Exception as e:
         print(f"Error during digit extraction: {str(e)}")
         raise
