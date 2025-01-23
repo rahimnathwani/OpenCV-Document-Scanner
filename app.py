@@ -86,14 +86,14 @@ def display_results(paths):
         H2("Processing Results"),
         Section(
             H3("Original Image"),
-            Img(src=f"/{paths['original']}", style="max-width: 500px"),
+            Img(src=f"/{paths['original']}", style="max-width: 500px; height: auto; object-fit: contain"),
             H3("Scanned Document"),
-            Img(src=f"/{paths['scanned']}", style="max-width: 500px"),
+            Img(src=f"/{paths['scanned']}", style="max-width: 500px; height: auto; object-fit: contain"),
             H3("Cropped ID Region"),
-            Img(src=f"/{paths['cropped']}", style="max-width: 500px"),
+            Img(src=f"/{paths['cropped']}", style="max-width: 500px; height: auto; object-fit: contain"),
             H3(f"Extracted Digits ({len(paths['digits'])} found)"),
             Div(style="display: flex; flex-wrap: wrap; gap: 10px")(
-                *[Img(src=f"/{digit}", style="max-width: 50px") for digit in paths['digits']]
+                *[Img(src=f"/{digit}", style="max-width: 50px; height: auto; object-fit: contain") for digit in paths['digits']]
             ) if paths['digits'] else P("No digits were extracted")
         )
     )
