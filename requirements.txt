@@ -4,3 +4,4 @@ numpy
 ocrd-fork-pylsd
 opencv-python
 scipy
+fasthtml>=0.3.0

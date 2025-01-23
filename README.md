@@ -61,7 +61,22 @@ crop_params = [
     (0.1, 0.1, 0.1, 0.1),  # Remove 10% from each edge
     (0.2, 0.0, 0.0, 0.2),  # Remove 20% from top and right edges
     (0.0, 0.2, 0.2, 0.0),  # Remove 20% from bottom and left edges
-    (0.8, 0.1, 0.4, 0.0),  # Extract just the date on the bottom right of the ID card
+    (0.8, 0.1, 0.4, 0.0),  # Extract just the digits on the bottom right of the ID card
+    (0.8, 0.1, 0.4, 0),
+    (0.8, 0.1, 0.44, 0.52),
+    (0.8, 0.1, 0.48, 0.48),
+    (0.8, 0.1, 0.52, 0.44),
+    (0.8, 0.1, 0.56, 0.4),
+    (0.8, 0.1, 0.6, 0.36),
+    (0.8, 0.1, 0.64, 0.32),
+    (0.8, 0.1, 0.68, 0.28),
+    (0.8, 0.1, 0.72, 0.24),
+    (0.8, 0.1, 0.76, 0.2),
+    (0.8, 0.1, 0.8, 0.16),
+    (0.8, 0.1, 0.84, 0.12),
+    (0.8, 0.1, 0.88, 0.08),
+    (0.8, 0.1, 0.92, 0.04),
+    (0.8, 0.1, 0.96, 0),
 ]
 ```
 Adjust the values in the list to customize the cropping regions as needed.
